@@ -1,7 +1,8 @@
 'use strict';
 
-import * as path from 'path';
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -10,6 +11,8 @@ export function activate(context: vscode.ExtensionContext) {
 			HomePanel.createOrShow(context.extensionPath);
 		})
 	);
+
+	// console.log(vscode.window.activeColorTheme);
 }
 
 export function deactivate() {}
@@ -41,7 +44,10 @@ class HomePanel {
 				enableScripts: true,
 
 				// restricts resource access
-				localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'media'))]
+				localResourceRoots: [
+					vscode.Uri.file(path.join(extensionPath, 'media')),
+					vscode.Uri.file(path.join(extensionPath, 'res'))
+				]
 			}
 		);
 
@@ -94,7 +100,23 @@ class HomePanel {
 	private _update() {
 		const webview = this._panel.webview;
 
-		this._panel.title = 'collection';
-		this._panel.webview.html = `<!doctype html><html><body>testbody</body></html>`;
+		this._panel.title = 'themepack';
+
+		const htmlPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/html/index.html'));
+		var html = fs.readFileSync(htmlPathOnDisk.path).toString();
+
+		const stylePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/css/styles.css'));
+		const styleUri = webview.asWebviewUri(stylePathOnDisk);
+		html = html.replace('${styleUri}', styleUri.toString());
+
+		const scriptPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/js/main.js'));
+		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
+		html = html.replace('${scriptUri}', scriptUri.toString());
+
+		const supplyDropImagePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/media/supplydrop.png'));
+		const supplyDropImageUri = webview.asWebviewUri(supplyDropImagePathOnDisk);
+		html = html.replace('${supplyDropImageUri}', supplyDropImageUri.toString());
+
+		webview.html = html;
 	}
 }
