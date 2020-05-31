@@ -106,8 +106,12 @@ class HomePanel {
 		var html = fs.readFileSync(htmlPathOnDisk.path).toString();
 
 		const stylePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/css/styles.css'));
-		const styleUri = webview.asWebviewUri(stylePathOnDisk);
-		html = html.replace('${styleUri}', styleUri.toString());
+		const stylesUri = webview.asWebviewUri(stylePathOnDisk);
+		html = html.replace('${stylesUri}', stylesUri.toString());
+
+		const animationsPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/css/animations.css'));
+		const animationsUri = webview.asWebviewUri(animationsPathOnDisk);
+		html = html.replace('${animationsUri}', animationsUri.toString());
 
 		const scriptPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/js/main.js'));
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
