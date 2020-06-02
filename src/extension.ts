@@ -45,7 +45,6 @@ class HomePanel {
 
 				// restricts resource access
 				localResourceRoots: [
-					vscode.Uri.file(path.join(extensionPath, 'media')),
 					vscode.Uri.file(path.join(extensionPath, 'res'))
 				]
 			}
@@ -117,7 +116,7 @@ class HomePanel {
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
 		html = html.replace('${scriptUri}', scriptUri.toString());
 
-		const supplyDropImagePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/media/supplydrop.png'));
+		const supplyDropImagePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/media/supplydrop.png'));
 		const supplyDropImageUri = webview.asWebviewUri(supplyDropImagePathOnDisk);
 		html = html.replace('${supplyDropImageUri}', supplyDropImageUri.toString());
 
