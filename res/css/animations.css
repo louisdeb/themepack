@@ -4,7 +4,7 @@
 }
 
 .swing-animation {
-  animation: swing 4s ease-in-out 1;
+  animation: swing 4s ease-in-out 1 forwards;
 }
 
 @keyframes swing {
@@ -38,7 +38,7 @@
 }
 
 .fade-out {
-  animation: fade-out 1s linear 1;
+  animation: fade-out 1s linear 1 forwards;
 }
 
 @keyframes fade-out {
@@ -51,7 +51,7 @@
 }
 
 .fade-in {
-  animation: fade-in 1s linear 1;
+  animation: fade-in 1s linear 1 forwards;
 }
 
 @keyframes fade-in {
