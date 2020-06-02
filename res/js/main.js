@@ -1,7 +1,7 @@
-var collection = [];
+var themesCollection = [];
 
 function fixit() {
-  if (collection.length) return;
+  if (themesCollection.length) return;
 
   var supplydrop = document.getElementById('supplydrop');
   supplydrop.classList.add('swing-animation');
@@ -36,15 +36,15 @@ class Spinner {
     Card.preload();
 
     this.currentCards = [
-      "death_star",
-      "death_star",
-      "death_star",
+      Card.random(),
+      Card.random(),
+      Card.random()
     ]
 
     this.nextCards = [
-      "death_star",
-      "death_star",
-      "death_star",
+      Card.random(),
+      Card.random(),
+      Card.random()
     ]
 
     this.container = domElement;
@@ -76,7 +76,7 @@ class Spinner {
   onSpinStart() {}
 
   onSpinEnd() {
-    const card = new Card(); // winning card
+    const card = new Card(Theme.theUniverse()); // force winning card
 
     const openCrateOverlay = document.getElementById('crate-open-overlay');
     const winScreen = new WinScreen(card);
@@ -88,7 +88,7 @@ class Spinner {
       openCrateInner.parentNode.removeChild(openCrateInner);
     }, 1000);
 
-    collection.add(card);
+    themesCollection.push(card.theme);
   }
 }
 
@@ -118,8 +118,7 @@ class Reel {
     this.animation.cancel();
 
     var that = this;
-    initialCards.forEach(function(theme) {
-      const card = new Card(theme);
+    initialCards.forEach(function(card) {
       var themeCard = that.createThemeCardElement(card);
       that.container.appendChild(themeCard);
     });
@@ -127,9 +126,10 @@ class Reel {
 
   renderCards(nextCards) {
     for (let i = 3; i < 3 + Math.floor(this.factor) * 10; i++) {
+      const next = nextCards[i - Math.floor(this.factor) * 10];
       const card = new Card(
         i >= 10 * Math.floor(this.factor) - 2
-          ? nextCards[i - Math.floor(this.factor) * 10]
+          ? (next ? next.theme : undefined)
           : undefined
       );
 
@@ -158,7 +158,7 @@ class Reel {
     elem.classList.add('theme-card');
 
     var title = document.createElement('div');
-    title.innerHTML = card.name + ' constructor';
+    title.innerHTML = card.theme.name;
 
     elem.appendChild(card.img);
     elem.appendChild(title);
@@ -170,33 +170,25 @@ class Reel {
 const cache = {};
 
 class Card {
-  constructor(name = Card.random()) {
-    this.name = name;
+  constructor(theme = Theme.random()) {
+    this.theme = theme;
 
-    if (cache[name]) {
-      this.img = cache[name].cloneNode();
+    if (cache[this.theme.name]) {
+      this.img = cache[this.theme.name].cloneNode();
     } else {
       this.img = new Image();
-      this.img.src = `../media/theme_preview_images/${name}.svg`;
+      this.img.src = `../media/theme_preview_images/${this.theme.imageSource}.svg`;
 
-      cache[name] = this.img;
+      cache[this.theme.name] = this.img;
     }
   }
 
   static preload() {
-    Card.themes.forEach((theme) => new Card(theme));
-  }
-
-  static get themes() {
-    return [
-      "death_star",
-      "falcon",
-      "yoda"
-    ];
+    Theme.allThemes.forEach((theme) => new Card(theme));
   }
 
   static random() {
-    return this.themes[Math.floor(Math.random() * this.themes.length)];
+    return new Card();
   }
 }
 
@@ -211,7 +203,7 @@ class WinScreen {
     overlay.classList.add('winscreen-overlay');
 
     var title = document.createElement('div');
-    title.innerHTML = '<h1>' + this.card.name + '</h1>';
+    title.innerHTML = '<h1>' + this.card.theme.name + '</h1>';
     title.classList.add('winscreen-title');
 
     var image = this.card.img;
@@ -235,5 +227,86 @@ class WinScreen {
       that.node.parentNode.removeChild(that.node);
       that = null;
     }, 1000);
+  }
+}
+
+var ThemeRarity = {
+  POOP: 1,
+  COMMON: 2,
+  RARE: 3,
+  EPIC: 4,
+  LEGENDARY: 5,
+  EXCLUSIVE: 6
+}
+
+class Theme {
+  name;
+  collection;
+  rarity;
+  imageSource;
+  fileSource;
+  // dateReleased;
+  // dateAcquired;
+
+  constructor(name, collection, rarity, imageSource, fileSource) {
+    this.name = name;
+    this.collection = collection;
+    this.rarity = rarity;
+    this.imageSource = imageSource;
+    this.fileSource = fileSource;
+  }
+
+  static get allThemes() {
+    return [
+      new Theme(
+        'PoopSteve420',
+        'Meme Stars',
+        ThemeRarity.POOP,
+        '',
+        ''
+      ),
+      new Theme(
+        'GitHub+',
+        'The Professional Developer',
+        ThemeRarity.COMMON,
+        '',
+        ''
+      ),
+      new Theme(
+        '808 State',
+        'Cyber City',
+        ThemeRarity.RARE,
+        '',
+        '',
+      ),
+      new Theme(
+        'Hearthstone',
+        'I\'d Rather Be Gaming',
+        ThemeRarity.EPIC,
+        '',
+        ''
+      ),
+      new Theme(
+        'IV - The Universe',
+        'The Visions',
+        ThemeRarity.LEGENDARY,
+        '',
+        ''
+      )
+    ];
+  }
+
+  static random() {
+    return this.allThemes[Math.floor(Math.random() * this.allThemes.length)];
+  }
+
+  static theUniverse() {
+    return new Theme(
+      'IV - The Universe',
+      'The Visions',
+      ThemeRarity.LEGENDARY,
+      '',
+      ''
+    );
   }
 }
