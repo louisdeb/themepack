@@ -11,7 +11,7 @@ function fixit() {
     supplydrop.onclick = function () {
       var crateOpenOverlay = document.getElementById('crate-open-overlay');
       crateOpenOverlay.classList.add('fade-in');
-      crateOpenOverlay.style.display = 'flex';
+      crateOpenOverlay.style.display = 'block';
       
       supplydrop.classList.add('fade-out');
 
@@ -75,9 +75,22 @@ class Spinner {
 
   onSpinStart() {}
 
-  onSpinEnd() {}
-}
+  onSpinEnd() {
+    const card = new Card(); // winning card
 
+    const openCrateOverlay = document.getElementById('crate-open-overlay');
+    const winScreen = new WinScreen(card);
+    openCrateOverlay.appendChild(winScreen.node);
+
+    const openCrateInner = document.getElementById('crate-open-inner');
+    openCrateInner.classList.add('fade-out');
+    setTimeout(function() {
+      openCrateInner.parentNode.removeChild(openCrateInner);
+    }, 1000);
+
+    collection.add(card);
+  }
+}
 
 class Reel {
   constructor(container, initialCards) {
@@ -87,7 +100,7 @@ class Reel {
     this.animation = this.container.animate(
       [
         { transform: 'none', filter: 'blur(0)' },
-        { filter: 'blur(2px)', offset: 0.5 },
+        { filter: 'blur(1px)', offset: 0.5 },
         {
           transform: `translateX(-${
             ((Math.floor(this.factor) * 10) / (3 + Math.floor(this.factor) * 10) * 400)
@@ -184,5 +197,43 @@ class Card {
 
   static random() {
     return this.themes[Math.floor(Math.random() * this.themes.length)];
+  }
+}
+
+class WinScreen {
+  constructor(card) {
+    this.card = card;
+    this.node = this.buildDomElement();
+  }
+
+  buildDomElement() {
+    var overlay = document.createElement('div');
+    overlay.classList.add('winscreen-overlay');
+
+    var title = document.createElement('div');
+    title.innerHTML = '<h1>' + this.card.name + '</h1>';
+    title.classList.add('winscreen-title');
+
+    var image = this.card.img;
+    image.classList.add('winscreen-image');
+    image.onclick = () => this.dismiss();
+
+    overlay.appendChild(title);
+    overlay.appendChild(image);
+
+    return overlay;
+  }
+
+  dismiss() {
+    var crateOpenOverlay = document.getElementById('crate-open-overlay');
+    crateOpenOverlay.classList.remove('fade-in');
+    crateOpenOverlay.classList.add('fade-out');
+
+    var that = this;
+    setTimeout(function() {
+      crateOpenOverlay.style.display = 'none';
+      that.node.parentNode.removeChild(that.node);
+      that = null;
+    }, 1000);
   }
 }
