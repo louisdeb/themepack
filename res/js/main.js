@@ -76,7 +76,7 @@ class Spinner {
   onSpinStart() {}
 
   onSpinEnd() {
-    const card = new Card(Theme.theUniverse()); // force winning card
+    const card = new Card(); // winning card
 
     const openCrateOverlay = document.getElementById('crate-open-overlay');
     const winScreen = new WinScreen(card);
@@ -177,7 +177,7 @@ class Card {
       this.img = cache[this.theme.name].cloneNode();
     } else {
       this.img = new Image();
-      this.img.src = `../media/theme_preview_images/${this.theme.imageSource}.svg`;
+      this.img.src = this.theme.imageSource;
 
       cache[this.theme.name] = this.img;
     }
@@ -262,35 +262,35 @@ class Theme {
         'PoopSteve420',
         'Meme Stars',
         ThemeRarity.POOP,
-        '',
+        'https://i.imgur.com/XrtcXEo.jpg',
         ''
       ),
       new Theme(
         'GitHub+',
         'The Professional Developer',
         ThemeRarity.COMMON,
-        '',
+        'https://i.imgur.com/OF1nZ4C.jpg',
         ''
       ),
       new Theme(
         '808 State',
         'Cyber City',
         ThemeRarity.RARE,
-        '',
+        'https://i.imgur.com/aeroqs4.jpg',
         '',
       ),
       new Theme(
         'Hearthstone',
         'I\'d Rather Be Gaming',
         ThemeRarity.EPIC,
-        '',
+        'https://i.imgur.com/wjZvNND.png',
         ''
       ),
       new Theme(
         'IV - The Universe',
         'The Visions',
         ThemeRarity.LEGENDARY,
-        '',
+        'https://i.imgur.com/peEmGPS.jpg',
         ''
       )
     ];
@@ -298,15 +298,5 @@ class Theme {
 
   static random() {
     return this.allThemes[Math.floor(Math.random() * this.allThemes.length)];
-  }
-
-  static theUniverse() {
-    return new Theme(
-      'IV - The Universe',
-      'The Visions',
-      ThemeRarity.LEGENDARY,
-      '',
-      ''
-    );
   }
 }
