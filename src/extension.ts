@@ -12,13 +12,13 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
-	// console.log(vscode.window.activeColorTheme);
+	// vscode.window.activeColorTheme
 }
 
 export function deactivate() {}
 
 class HomePanel {
-	public static currentPanel: HomePanel | undefined; // singleton
+	public static currentPanel: HomePanel | undefined;
 
 	public static readonly viewType = 'home';
 
@@ -43,7 +43,6 @@ class HomePanel {
 			{
 				enableScripts: true,
 
-				// restricts resource access
 				localResourceRoots: [
 					vscode.Uri.file(path.join(extensionPath, 'res'))
 				]
@@ -115,6 +114,14 @@ class HomePanel {
 		const scriptPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/js/main.js'));
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
 		html = html.replace('${scriptUri}', scriptUri.toString());
+
+		const accountImagePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/media/account.png'));
+		const accountImageUri = webview.asWebviewUri(accountImagePathOnDisk);
+		html = html.replace('${accountImageUri}', accountImageUri.toString());
+
+		const questionMarkImagePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/media/question-mark.png'));
+		const questionMarkImageUri = webview.asWebviewUri(questionMarkImagePathOnDisk);
+		html = html.replace('${questionMarkImageUri}', questionMarkImageUri.toString());
 
 		const supplyDropImagePathOnDisk = vscode.Uri.file(path.join(this._extensionPath, '/res/media/supplydrop.png'));
 		const supplyDropImageUri = webview.asWebviewUri(supplyDropImagePathOnDisk);

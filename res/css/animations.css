@@ -1,5 +1,5 @@
 #supplydrop {
-  top: -100%;
+  top: -120%;
   position: absolute;
 }
 
@@ -9,7 +9,7 @@
 
 @keyframes swing {
   0% {
-    top: -100%;
+    top: -120%;
     left: 30%; 
     transform: rotate(16deg);
   }

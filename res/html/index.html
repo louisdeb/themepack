@@ -20,7 +20,12 @@
     </div>
 
     <div id='content'>
-      <h1>themepack</h1>
+      <div class='header'>
+        <h1>themepack</h1>
+        <div class='flex-filler'></div>
+        <img class='header-icon' src='${accountImageUri}'>
+        <img class='header-icon' src='${questionMarkImageUri}'>
+      </div>
 
       <!--
               <h2>Current Theme</h2>
@@ -29,17 +34,25 @@
               </div>
               -->
 
-      <h2>Collection</h2>
+      <div class='header'>
+        <h2>Collection</h2>
+        <div class='flex-filler'></div>
+        <div class='link'>view all</div>
+      </div>
       <div class='collection'>
         <div id='nothemes'>
-          <p>No themes? <span class='button' onclick='fixit()'>Fix it.</span></p>
+          <p>No themes? <span class='button' onclick='fixit()'>Let's fix that</span></p>
         </div>
         <div id='supplydrop'>
           <img height='96px' width='96px' src='${supplyDropImageUri}' />
         </div>
       </div>
 
-      <h2>Marketplace</h2>
+      <div class='header'>
+        <h2>Marketplace</h2>
+        <div class='flex-filler'></div>
+        <div class='link'>browse</div>
+      </div>
       <div class='marketplace'>
         <div class='theme-card'></div>
         <div class='theme-card'></div>

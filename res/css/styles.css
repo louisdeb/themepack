@@ -19,12 +19,29 @@ body.vscode-light, body.vscode-dark, body.vscode-high-contrast, body {
   padding: 20px;
 }
 
-.rule {
-  width: 200px;
-  height: 1px;
-  display: block;
-  background-color: #a9a9ad;
-  margin-top: 0px;
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.flex-filler {
+  flex-grow: 1;
+}
+
+.header-icon {
+  width: 30px;
+  height: 30px;
+  filter: invert(95%) sepia(0%) saturate(7500%) 
+          hue-rotate(120deg) brightness(105%) contrast(101%);
+  opacity: 0.7;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 h1 {
