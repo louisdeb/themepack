@@ -126,7 +126,7 @@ span.button {
   width: 100%;
   height: 400px;
   max-height: 400px;
-  background-color: #a9a9ad;
+  background-color: #45454b;
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -144,16 +144,6 @@ span.button {
   z-index: 10;
 }
 
-#crate-open-scroll-region .theme-card {
-  height: 300px;
-  width: 210px;
-  min-width: 210px;
-  background-color: white;
-  color: black;
-  margin-left: 15px;
-  margin-right: 15px;
-}
-
 #spinner {
   width: 100%;
   height: 300px;
@@ -167,9 +157,32 @@ span.button {
   position: absolute;
 }
 
-#reel img {
-  width: 100px;
-  height: 100px;
+#crate-open-overlay .theme-card {
+  height: 300px;
+  width: 210px;
+  min-width: 210px;
+  background-color: white;
+  color: white;
+  margin-left: 15px;
+  margin-right: 15px;
+  border: solid 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#crate-open-overlay .theme-card h2 {
+  margin: 0;
+}
+
+#crate-open-overlay .theme-card h3 {
+  margin: 0;
+}
+
+#crate-open-overlay .theme-card img {
+  width: 140px;
+  height: 200px;
   margin: 10px;
 }
 
@@ -188,7 +201,8 @@ span.button {
   color: #fefffe;
 }
 
-.winscreen-image {
-  width: 210px;
-  height: 300px;
+.winscreen-theme-description {
+  margin-top: 10px;
+  font-style: italic;
+  color: #fefffe;
 }

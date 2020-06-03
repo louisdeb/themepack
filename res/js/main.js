@@ -119,7 +119,7 @@ class Reel {
 
     var that = this;
     initialCards.forEach(function(card) {
-      var themeCard = that.createThemeCardElement(card);
+      var themeCard = card.getElement();
       that.container.appendChild(themeCard);
     });
   }
@@ -133,7 +133,7 @@ class Reel {
           : undefined
       );
 
-      var themeCard = this.createThemeCardElement(card);
+      var themeCard = card.getElement();
       this.container.appendChild(themeCard);
     }
   }
@@ -151,19 +151,6 @@ class Reel {
     return Promise.race([animationPromise, timeoutPromise]).then(() => {
       if (this.animation.playState !== 'finished') this.animation.finish();
     });
-  }
-
-  createThemeCardElement(card) {
-    var elem = document.createElement('div');
-    elem.classList.add('theme-card');
-
-    var title = document.createElement('div');
-    title.innerHTML = card.theme.name;
-
-    elem.appendChild(card.img);
-    elem.appendChild(title);
-
-    return elem;
   }
 }
 
@@ -190,6 +177,65 @@ class Card {
   static random() {
     return new Card();
   }
+
+  getElement() {
+    var elem = document.createElement('div');
+    elem.classList.add('theme-card');
+    elem.style.borderColor = this.getRarityColor(this.theme.rarity);
+    elem.style.backgroundColor = this.getBackgroundColor(this.theme.rarity);
+
+    var title = document.createElement('h2');
+    title.innerHTML = this.theme.name;
+
+    var collection = document.createElement('h3');
+    collection.innerHTML = this.theme.collection;
+
+    elem.appendChild(title);
+    elem.appendChild(collection);
+    elem.appendChild(this.img);
+
+    return elem;
+  }
+
+  // can we solve this with another enum?
+  getRarityColor(rarity) {
+    switch (rarity) {
+      case ThemeRarity.POOP:
+        return 'rgba(166, 40, 37, 1)';
+      case ThemeRarity.COMMON:
+        return 'white';
+      case ThemeRarity.RARE:
+        return 'rgba(0, 0, 255, 1)';
+      case ThemeRarity.EPIC:
+        return 'rgba(129, 0, 129, 1)';
+      case ThemeRarity.LEGENDARY:
+        return 'rgba(255, 215, 0, 1)';
+      case ThemeRarity.EXCLUSIVE:
+        return 'rgba(255, 192, 203, 0.5)';
+      default:
+        return 'white';
+    }
+  }
+
+  // likewise
+  getBackgroundColor(rarity) {
+    switch (rarity) {
+      case ThemeRarity.POOP:
+        return 'rgba(166, 40, 37, 0.5)';
+      case ThemeRarity.COMMON:
+        return 'rgba(180, 180, 180, 1)';
+      case ThemeRarity.RARE:
+        return 'rgba(0, 0, 255, 0.5)';
+      case ThemeRarity.EPIC:
+        return 'rgba(129, 0, 129, 0.5)';
+      case ThemeRarity.LEGENDARY:
+        return 'rgba(255, 215, 0, 0.5)';
+      case ThemeRarity.EXCLUSIVE:
+        return 'rgba(255, 192, 203, 0.5)';
+      default:
+        return 'white';
+    }
+  }
 }
 
 class WinScreen {
@@ -203,15 +249,19 @@ class WinScreen {
     overlay.classList.add('winscreen-overlay');
 
     var title = document.createElement('div');
-    title.innerHTML = '<h1>' + this.card.theme.name + '</h1>';
+    title.innerHTML = '<h1>You Won:</h1>';
     title.classList.add('winscreen-title');
 
-    var image = this.card.img;
-    image.classList.add('winscreen-image');
-    image.onclick = () => this.dismiss();
+    var cardElem = this.card.getElement();
+    cardElem.onclick = () => this.dismiss();
+
+    var description = document.createElement('div');
+    description.innerHTML = this.card.theme.description;
+    description.classList.add('winscreen-theme-description');
 
     overlay.appendChild(title);
-    overlay.appendChild(image);
+    overlay.appendChild(cardElem);
+    overlay.appendChild(description);
 
     return overlay;
   }
@@ -241,6 +291,7 @@ var ThemeRarity = {
 
 class Theme {
   name;
+  description;
   collection;
   rarity;
   imageSource;
@@ -248,8 +299,9 @@ class Theme {
   // dateReleased;
   // dateAcquired;
 
-  constructor(name, collection, rarity, imageSource, fileSource) {
+  constructor(name, description, collection, rarity, imageSource, fileSource) {
     this.name = name;
+    this.description = description;
     this.collection = collection;
     this.rarity = rarity;
     this.imageSource = imageSource;
@@ -260,6 +312,7 @@ class Theme {
     return [
       new Theme(
         'PoopSteve420',
+        'C\'mon and slam, and welcome to the jam!',
         'Meme Stars',
         ThemeRarity.POOP,
         'https://i.imgur.com/XrtcXEo.jpg',
@@ -267,6 +320,7 @@ class Theme {
       ),
       new Theme(
         'GitHub+',
+        'Actually guys we should be using GitLab',
         'The Professional Developer',
         ThemeRarity.COMMON,
         'https://i.imgur.com/OF1nZ4C.jpg',
@@ -274,6 +328,7 @@ class Theme {
       ),
       new Theme(
         '808 State',
+        'I got love for you if you were born in the \'80s',
         'Cyber City',
         ThemeRarity.RARE,
         'https://i.imgur.com/aeroqs4.jpg',
@@ -281,6 +336,7 @@ class Theme {
       ),
       new Theme(
         'Hearthstone',
+        'Well Met!',
         'I\'d Rather Be Gaming',
         ThemeRarity.EPIC,
         'https://i.imgur.com/wjZvNND.png',
@@ -288,7 +344,8 @@ class Theme {
       ),
       new Theme(
         'IV - The Universe',
-        'The Visions',
+        'For humanity at first was rude and rough and simple in its actions',
+        'Scivias',
         ThemeRarity.LEGENDARY,
         'https://i.imgur.com/peEmGPS.jpg',
         ''
