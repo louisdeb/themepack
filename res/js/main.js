@@ -1,5 +1,14 @@
 var themesCollection = [];
 
+function updateCollection() {
+  const collectionNode = document.getElementById('collection');
+  collectionNode.innerHTML = '';
+  for (var i = 0; i < themesCollection.length; i++) {
+    var card = new Card(themesCollection[i]);
+    collectionNode.appendChild(card.getElement());
+  }
+}
+
 function fixit() {
   if (themesCollection.length) return;
 
@@ -92,6 +101,7 @@ class Spinner {
     }, 1000);
 
     themesCollection.push(card.theme);
+    updateCollection();
   }
 }
 
