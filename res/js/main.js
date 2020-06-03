@@ -76,7 +76,10 @@ class Spinner {
   onSpinStart() {}
 
   onSpinEnd() {
-    const card = new Card(); // winning card
+    const reel = document.getElementById('reel');
+    const winningThemeName = reel.children[17].children[0].innerHTML;
+
+    const card = new Card(Theme.getThemeByName(winningThemeName));
 
     const openCrateOverlay = document.getElementById('crate-open-overlay');
     const winScreen = new WinScreen(card);
@@ -355,5 +358,12 @@ class Theme {
 
   static random() {
     return this.allThemes[Math.floor(Math.random() * this.allThemes.length)];
+  }
+
+  static getThemeByName(name) {
+    const allThemes = Theme.allThemes;
+    for (var i = 0; i < allThemes.length; i++) {
+      if (allThemes[i].name === name) return allThemes[i];
+    }
   }
 }
