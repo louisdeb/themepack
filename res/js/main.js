@@ -309,16 +309,18 @@ class Theme {
   rarity;
   imageSource;
   fileSource;
+  stockPrice;
   // dateReleased;
   // dateAcquired;
 
-  constructor(name, description, collection, rarity, imageSource, fileSource) {
+  constructor(name, description, collection, rarity, imageSource, fileSource, stockPrice) {
     this.name = name;
     this.description = description;
     this.collection = collection;
     this.rarity = rarity;
     this.imageSource = imageSource;
     this.fileSource = fileSource;
+    this.stockPrice = stockPrice;
   }
 
   static get allThemes() {
@@ -329,7 +331,8 @@ class Theme {
         'Meme Stars',
         ThemeRarity.POOP,
         'https://i.imgur.com/XrtcXEo.jpg',
-        ''
+        '',
+        0.80
       ),
       new Theme(
         'GitHub+',
@@ -337,7 +340,8 @@ class Theme {
         'The Professional Developer',
         ThemeRarity.COMMON,
         'https://i.imgur.com/OF1nZ4C.jpg',
-        ''
+        '',
+        1.00
       ),
       new Theme(
         '808 State',
@@ -346,6 +350,7 @@ class Theme {
         ThemeRarity.RARE,
         'https://i.imgur.com/aeroqs4.jpg',
         '',
+        2.50
       ),
       new Theme(
         'Hearthstone',
@@ -353,7 +358,8 @@ class Theme {
         'I\'d Rather Be Gaming',
         ThemeRarity.EPIC,
         'https://i.imgur.com/wjZvNND.png',
-        ''
+        '',
+        4.00
       ),
       new Theme(
         'IV - The Universe',
@@ -361,12 +367,15 @@ class Theme {
         'Scivias',
         ThemeRarity.LEGENDARY,
         'https://i.imgur.com/peEmGPS.jpg',
-        ''
+        '',
+        12.00
       )
     ];
   }
 
   static random() {
+    var r = Math.random();
+    
     return this.allThemes[Math.floor(Math.random() * this.allThemes.length)];
   }
 
@@ -376,4 +385,77 @@ class Theme {
       if (allThemes[i].name === name) return allThemes[i];
     }
   }
+}
+
+class Transaction {
+  theme;
+  user;
+  price;
+  opened;
+
+  constructor(theme, user, price, opened) {
+    this.theme = theme;
+    this.user = user;
+    this.price = price;
+    this.opened = opened;
+  }
+
+  getElement() {
+    var card = new Card(this.theme).getElement();
+    
+    var transactionOverlay = document.createElement('div');
+    transactionOverlay.classList.add('transaction-overlay');
+
+    var transactionDetail = document.createElement('div');
+    transactionDetail.classList.add('transaction-detail');
+    transactionDetail.innerHTML = 
+      (this.opened ? 'Opened by ' : 'Bought by ')
+      + this.user
+      + (this.opened ? '' : ('\nfor ' + this.price));
+
+    transactionOverlay.appendChild(transactionDetail);
+
+    card.appendChild(transactionOverlay);
+    return card;
+  }
+}
+
+var users = [
+  "domdunkno",
+  "jonnyg",
+  "ewb",
+  "bellacodes",
+  "poopsteve",
+  "joma"
+];
+
+function createRandomTransaction() {
+  var theme = Theme.random();
+  var user = users[Math.floor(Math.random() * users.length)];
+  var opened = Math.round(Math.random());
+  var price = opened 
+    ? ''
+    : '£' + Math.abs((theme.stockPrice + (Math.random() - 0.5) * 10)).toFixed(2);
+
+  var transaction = new Transaction(theme, user, price, opened);
+  return transaction;
+}
+
+function addTransactionToMarketplace() {
+  var transaction = createRandomTransaction();
+  var marketplace = document.getElementById('marketplace');
+  marketplace.appendChild(transaction.getElement());
+}
+
+window.onload = () => startMarketplaceFeed();
+
+function startMarketplaceFeed() {
+  var marketplace = document.getElementById('marketplace');
+  setInterval(function() {
+    addTransactionToMarketplace();
+
+    if (marketplace.children.length >= 9) {
+      marketplace.removeChild(marketplace.firstChild);
+    }
+  }, (Math.random() * 10000));
 }
